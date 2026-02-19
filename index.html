@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dzal Games - Platform Game Online</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .admin-badge {
-            background: var(--warning);
-            color: var(--dark);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -79,7 +69,7 @@
                     <span class="vip-current">Masa Aktif: <span id="vipExpiry">-</span></span>
                 </div>
                 <div class="vip-withdraw-info" id="vipWithdrawInfo">
-                    <div>Sisa Withdraw Minggu Ini:</div>
+                    <div>Sisa Withdraw Periode Ini:</div>
                     <div class="withdraw-countdown" id="remainingWithdraw">Rp 0</div>
                     <div id="withdrawTimer" style="font-size: 14px; margin-top: 5px;"></div>
                 </div>
@@ -109,6 +99,7 @@
                             <p>✅ Withdraw Rp 50.000/minggu</p>
                             <p>✅ Bonus saldo 10%</p>
                             <p>✅ Akses Zeus & Duo Facai</p>
+                            <p>✅ Menang 100% di Zeus & Duo Facai</p>
                             <p class="highlight">💰 Total withdraw: Rp 200.000/bulan</p>
                         </div>
                         <button onclick="joinVIP(2)" class="btn-join-vip vip2" id="btnVIP2">Gabung VIP 2</button>
@@ -123,6 +114,7 @@
                             <p>✅ Bonus saldo 20%</p>
                             <p>✅ Akses semua game</p>
                             <p>✅ Prioritas withdraw</p>
+                            <p>✅ Jackpot spesial</p>
                             <p class="highlight">💰 Total withdraw: Rp 3.500.000/bulan</p>
                         </div>
                         <button onclick="joinVIP(3)" class="btn-join-vip vip3" id="btnVIP3">Gabung VIP 3</button>
@@ -234,169 +226,7 @@
         <div id="notification" class="notification"></div>
     </div>
 
-    <script>
-        // Fungsi untuk toggle form
-        function showRegister() {
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerForm').classList.add('active');
-        }
-
-        function showLogin() {
-            document.getElementById('registerForm').classList.remove('active');
-            document.getElementById('loginForm').classList.add('active');
-        }
-
-        // Fungsi notifikasi
-        function showNotification(message, type = 'success') {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.className = `notification ${type}`;
-            notif.style.display = 'block';
-            
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 3000);
-        }
-
-        // Fungsi update saldo di tampilan
-        function updateSaldoDisplay() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (user) {
-                document.getElementById('saldo').textContent = user.saldo.toLocaleString('id-ID');
-            }
-        }
-
-        // Fungsi update VIP display
-        function updateVIPDisplay() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (!user) return;
-
-            const vipBadge = document.getElementById('vipBadge');
-            const vipStatus = document.getElementById('vipStatus');
-            const vipLevel = document.getElementById('currentVipLevel');
-            const vipExpiry = document.getElementById('vipExpiry');
-            const remainingWithdraw = document.getElementById('remainingWithdraw');
-            
-            if (user.vip) {
-                const now = new Date();
-                const expiry = new Date(user.vip.expiry);
-                
-                if (expiry > now) {
-                    // VIP masih aktif
-                    vipBadge.style.display = 'inline';
-                    vipBadge.className = `vip-badge vip${user.vip.level}`;
-                    vipBadge.textContent = `VIP ${user.vip.level}`;
-                    
-                    vipStatus.style.display = 'flex';
-                    vipLevel.textContent = `VIP ${user.vip.level}`;
-                    vipExpiry.textContent = expiry.toLocaleDateString('id-ID');
-                    
-                    // Hitung sisa withdraw
-                    const withdrawLimit = getWithdrawLimit(user.vip.level);
-                    const usedWithdraw = user.vip.usedWithdraw || 0;
-                    const remaining = withdrawLimit - usedWithdraw;
-                    remainingWithdraw.textContent = `Rp ${remaining.toLocaleString('id-ID')}`;
-                    
-                    // Update tombol VIP
-                    document.getElementById('btnVIP1').disabled = true;
-                    document.getElementById('btnVIP2').disabled = true;
-                    document.getElementById('btnVIP3').disabled = true;
-                    
-                    // Update akses game
-                    updateGameAccess(user);
-                    
-                    // Start withdraw timer
-                    startWithdrawTimer(user);
-                } else {
-                    // VIP expired
-                    user.vip = null;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    
-                    // Update di database users
-                    let users = JSON.parse(localStorage.getItem('users')) || [];
-                    const userIndex = users.findIndex(u => u.id === user.id);
-                    if (userIndex !== -1) {
-                        users[userIndex].vip = null;
-                        localStorage.setItem('users', JSON.stringify(users));
-                    }
-                    
-                    resetVIPDisplay();
-                }
-            } else {
-                resetVIPDisplay();
-            }
-        }
-
-        function resetVIPDisplay() {
-            document.getElementById('vipBadge').style.display = 'none';
-            document.getElementById('vipStatus').style.display = 'none';
-            document.getElementById('btnVIP1').disabled = false;
-            document.getElementById('btnVIP2').disabled = false;
-            document.getElementById('btnVIP3').disabled = false;
-            updateGameAccess({ vip: null });
-        }
-
-        function getWithdrawLimit(level) {
-            switch(level) {
-                case 1: return 20000; // per minggu
-                case 2: return 50000; // per minggu
-                case 3: return 350000; // per 3 hari
-                default: return 0;
-            }
-        }
-
-        function getWithdrawPeriod(level) {
-            switch(level) {
-                case 1: return 7; // 7 hari
-                case 2: return 7; // 7 hari
-                case 3: return 3; // 3 hari
-                default: return 0;
-            }
-        }
-
-        function startWithdrawTimer(user) {
-            if (!user.vip) return;
-            
-            const updateTimer = () => {
-                const now = new Date();
-                const lastWithdraw = user.vip.lastWithdrawReset ? new Date(user.vip.lastWithdrawReset) : new Date();
-                const period = getWithdrawPeriod(user.vip.level) * 24 * 60 * 60 * 1000;
-                const nextReset = new Date(lastWithdraw.getTime() + period);
-                
-                if (nextReset > now) {
-                    const diff = nextReset - now;
-                    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-                    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-                    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-                    
-                    document.getElementById('withdrawTimer').textContent = 
-                        `Reset dalam: ${days}h ${hours}j ${minutes}m`;
-                } else {
-                    // Reset withdraw limit
-                    user.vip.usedWithdraw = 0;
-                    user.vip.lastWithdrawReset = new Date().toISOString();
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    
-                    // Update di database
-                    let users = JSON.parse(localStorage.getItem('users')) || [];
-                    const userIndex = users.findIndex(u => u.id === user.id);
-                    if (userIndex !== -1) {
-                        users[userIndex].vip = user.vip;
-                        localStorage.setItem('users', JSON.stringify(users));
-                    }
-                    
-                    updateVIPDisplay();
-                }
-            };
-            
-            updateTimer();
-            setInterval(updateTimer, 60000); // Update setiap menit
-        }
-
-        function updateGameAccess(user) {
-            const zeusGame = document.getElementById('gameZeus');
-            const duoGame = document.getElementById('gameDuo');
-            
-            if (user.vip && user.vip.level >= 2) {
-                zeusGame.classList.remove('locked');
-               
+    <script src="data.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
