@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Spinner - Dzal Games</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="game-info">
+                <h2>💰 Money Spinner</h2>
+                <div class="game-saldo">Saldo: Rp <span id="saldo">0</span></div>
+                <div id="vipBadge" class="game-vip-badge" style="display: none;"></div>
+            </div>
+            <a href="index.html" class="btn-kembali">Kembali</a>
+        </div>
+
+        <div class="game-content">
+            <div class="game-title">
+                <h2>Money Spinner</h2>
+                <p>Spin dan dapatkan hadiah!</p>
+            </div>
+
+            <div class="prize-list">
+                <div class="prize-item" data-probability="70%">Rp 2.000</div>
+                <div class="prize-item" data-probability="20%">Rp 3.000</div>
+                <div class="prize-item" data-probability="5%">Rp 20.000</div>
+                <div class="prize-item" data-probability="3%">Rp 100.000</div>
+                <div class="prize-item" data-probability="2%">Rp 2.000.000</div>
+            </div>
+
+            <div class="bet-control">
+                <label for="betAmount">Harga Spin:</label>
+                <input type="number" id="betAmount" class="bet-input" min="1000" max="10000" step="1000" value="1000" readonly>
+                <span style="margin-left: 10px;">(Rp 1.000 / spin)</span>
+            </div>
+
+            <div class="spinner-wheel" id="wheel" onclick="spinWheel()">
+                <div class="wheel-pointer"></div>
+            </div>
+
+            <div class="game-controls">
+                <button onclick="spinWheel()" class="btn-game btn-spin" id="spinBtn">Spin (Rp 1.000)</button>
+            </div>
+
+            <div id="resultMessage" class="result-message" style="display: none;"></div>
+
+            <div class="game-stats">
+                <div class="stat-card">
+                    <h4>Total Spin</h4>
+                    <div class="stat-value" id="totalSpin">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Menang</h4>
+                    <div class="stat-value" id="totalWin">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Hadiah</h4>
+                    <div class="stat-value" id="totalPrize">Rp 0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Jackpot</h4>
+                    <div class="stat-value" id="jackpotCount">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi -->
+    <div id="notification" class="notification"></div>
+
+    <script src="data.js"></script>
+    <script src="money-spinner.js"></script>
+</body>
+</html>
