@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong - Dzal Games</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="game-info">
+                <h2>🎴 Mahjong</h2>
+                <div class="game-saldo">Saldo: Rp <span id="saldo">0</span></div>
+                <div id="vipBadge" class="game-vip-badge" style="display: none;"></div>
+            </div>
+            <a href="index.html" class="btn-kembali">Kembali</a>
+        </div>
+
+        <div class="game-content">
+            <div class="game-title">
+                <h2>Mahjong Match</h2>
+                <p>Temukan pasangan uang yang sama!</p>
+            </div>
+
+            <div class="bet-control">
+                <label for="betAmount">Taruhan:</label>
+                <input type="number" id="betAmount" class="bet-input" min="1000" max="100000" step="1000" value="1000">
+            </div>
+
+            <div id="mahjongBoard" class="mahjong-board"></div>
+
+            <div class="game-controls">
+                <button onclick="spinMahjong()" class="btn-game btn-spin" id="spinBtn">Mulai Game</button>
+                <button onclick="resetGame()" class="btn-game" style="background: var(--warning);">Reset</button>
+            </div>
+
+            <div id="resultMessage" class="result-message" style="display: none;"></div>
+
+            <div class="game-stats">
+                <div class="stat-card">
+                    <h4>Menang</h4>
+                    <div class="stat-value" id="winCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Kalah</h4>
+                    <div class="stat-value" id="loseCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Hadiah</h4>
+                    <div class="stat-value" id="totalPrize">Rp 0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Win Rate</h4>
+                    <div class="stat-value" id="winRate">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi -->
+    <div id="notification" class="notification"></div>
+
+    <script src="data.js"></script>
+    <script src="mahjong.js"></script>
+</body>
+</html>
