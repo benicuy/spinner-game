@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dzal Games - Platform Game Online</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-badge {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Login -->
+        <div id="loginForm" class="form-container active">
+            <h2>Login ke Dzal Games</h2>
+            <form id="login">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <p class="switch-form">Belum punya akun? <a href="#" onclick="showRegister()">Register</a></p>
+            </form>
+        </div>
+
+        <!-- Form Register -->
+        <div id="registerForm" class="form-container">
+            <h2>Register Akun Baru</h2>
+            <form id="register">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regFullname">Nama Lengkap</label>
+                    <input type="text" id="regFullname" required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+                <p class="switch-form">Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
+            </form>
+        </div>
+
+        <!-- Dashboard (setelah login) -->
+        <div id="dashboard" class="dashboard">
+            <div class="header">
+                <h1>
+                    Selamat Datang, <span id="userName"></span>
+                    <span id="adminBadge" class="admin-badge" style="display: none;">Admin</span>
+                    <span id="vipBadge" class="vip-badge none" style="display: none;">Non VIP</span>
+                </h1>
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+            
+            <div class="saldo-card">
+                <h3>Saldo Anda</h3>
+                <div class="saldo-nominal">Rp <span id="saldo">0</span></div>
+            </div>
+
+            <!-- VIP Status -->
+            <div id="vipStatus" class="vip-status" style="display: none;">
+                <div class="vip-info">
+                    <span class="vip-current">Status VIP: <span id="currentVipLevel">Non VIP</span></span>
+                    <span class="vip-current">Masa Aktif: <span id="vipExpiry">-</span></span>
+                </div>
+                <div class="vip-withdraw-info" id="vipWithdrawInfo">
+                    <div>Sisa Withdraw Minggu Ini:</div>
+                    <div class="withdraw-countdown" id="remainingWithdraw">Rp 0</div>
+                    <div id="withdrawTimer" style="font-size: 14px; margin-top: 5px;"></div>
+                </div>
+            </div>
+
+            <!-- VIP Section -->
+            <div class="vip-section">
+                <div class="vip-title">✨ VIP MEMBERSHIP ✨</div>
+                <div class="vip-grid">
+                    <!-- VIP 1 -->
+                    <div class="vip-card vip1">
+                        <div class="vip-level">VIP 1</div>
+                        <div class="vip-price">Rp 30.000 <small>/bulan</small></div>
+                        <div class="vip-benefit">
+                            <p>✅ Withdraw Rp 20.000/minggu</p>
+                            <p>✅ Bonus saldo 5%</p>
+                            <p class="highlight">💰 Total withdraw: Rp 80.000/bulan</p>
+                        </div>
+                        <button onclick="joinVIP(1)" class="btn-join-vip vip1" id="btnVIP1">Gabung VIP 1</button>
+                    </div>
+
+                    <!-- VIP 2 -->
+                    <div class="vip-card vip2">
+                        <div class="vip-level">VIP 2</div>
+                        <div class="vip-price">Rp 200.000 <small>/bulan</small></div>
+                        <div class="vip-benefit">
+                            <p>✅ Withdraw Rp 50.000/minggu</p>
+                            <p>✅ Bonus saldo 10%</p>
+                            <p>✅ Akses Zeus & Duo Facai</p>
+                            <p class="highlight">💰 Total withdraw: Rp 200.000/bulan</p>
+                        </div>
+                        <button onclick="joinVIP(2)" class="btn-join-vip vip2" id="btnVIP2">Gabung VIP 2</button>
+                    </div>
+
+                    <!-- VIP 3 -->
+                    <div class="vip-card vip3">
+                        <div class="vip-level">VIP 3</div>
+                        <div class="vip-price">Rp 3.000.000 <small>/bulan</small></div>
+                        <div class="vip-benefit">
+                            <p>✅ Withdraw Rp 350.000/3 hari</p>
+                            <p>✅ Bonus saldo 20%</p>
+                            <p>✅ Akses semua game</p>
+                            <p>✅ Prioritas withdraw</p>
+                            <p class="highlight">💰 Total withdraw: Rp 3.500.000/bulan</p>
+                        </div>
+                        <button onclick="joinVIP(3)" class="btn-join-vip vip3" id="btnVIP3">Gabung VIP 3</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-grid">
+                <a href="mahjong.html" class="game-card mahjong" id="gameMahjong">
+                    <span class="game-badge free">Free</span>
+                    <h3>Mahjong</h3>
+                    <p>Game Mahjong klasik</p>
+                </a>
+                <a href="zeus.html" class="game-card zeus" id="gameZeus">
+                    <span class="game-badge vip2">VIP 2</span>
+                    <h3>Zeus</h3>
+                    <p>Petualangan Dewa Zeus</p>
+                </a>
+                <a href="duo-facai.html" class="game-card duo" id="gameDuo">
+                    <span class="game-badge vip2">VIP 2</span>
+                    <h3>Duo Facai</h3>
+                    <p>Keberuntungan berlipat</p>
+                </a>
+                <a href="money-spinner.html" class="game-card money" id="gameMoney">
+                    <span class="game-badge free">Free</span>
+                    <h3>Money Spinner</h3>
+                    <p>Spin dan dapatkan hadiah</p>
+                </a>
+            </div>
+
+            <!-- Admin Panel (hanya untuk admin) -->
+            <div id="adminPanel" style="display: none;">
+                <div class="topup-section">
+                    <h3>Verifikasi Top Up <span class="admin-badge">Admin</span></h3>
+                    <div id="pendingTopups" class="riwayat-list"></div>
+                </div>
+
+                <div class="withdraw-section">
+                    <h3>Verifikasi Withdraw <span class="admin-badge">Admin</span></h3>
+                    <div id="pendingWithdraws" class="riwayat-list"></div>
+                </div>
+
+                <div class="withdraw-section">
+                    <h3>Verifikasi VIP <span class="admin-badge">Admin</span></h3>
+                    <div id="pendingVIP" class="riwayat-list"></div>
+                </div>
+            </div>
+
+            <!-- User Panel -->
+            <div id="userPanel">
+                <div class="topup-section">
+                    <h3>Top Up Saldo</h3>
+                    <div class="qr-code">
+                        <img src="https://cdn.phototourl.com/uploads/2026-02-16-7fbca8f1-68b1-4b62-a6fa-b6e36a0be7a7.jpg" alt="QRIS Dzal Store">
+                        <p class="qr-text">Scan QRIS untuk top up</p>
+                        <p class="qr-store">Dzal Store - Satu Qris untuk semua</p>
+                    </div>
+                    
+                    <form id="topupForm">
+                        <div class="form-group">
+                            <label for="jumlahTopup">Jumlah Top Up (Rp)</label>
+                            <input type="number" id="jumlahTopup" min="10000" step="10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="buktiTransfer">Upload Bukti Transfer</label>
+                            <input type="file" id="buktiTransfer" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn-topup">Kirim Bukti Pembayaran</button>
+                    </form>
+                </div>
+
+                <div class="withdraw-section">
+                    <h3>Withdraw Saldo</h3>
+                    <div id="withdrawLimitInfo" class="withdraw-limit"></div>
+                    <form id="withdrawForm">
+                        <div class="form-group">
+                            <label for="jumlahWithdraw">Jumlah Withdraw (Rp)</label>
+                            <input type="number" id="jumlahWithdraw" min="50000" step="10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankTujuan">Bank / E-Wallet Tujuan</label>
+                            <select id="bankTujuan" required>
+                                <option value="">Pilih tujuan</option>
+                                <option value="BCA">BCA</option>
+                                <option value="Mandiri">Mandiri</option>
+                                <option value="BNI">BNI</option>
+                                <option value="BRI">BRI</option>
+                                <option value="DANA">DANA</option>
+                                <option value="OVO">OVO</option>
+                                <option value="GoPay">GoPay</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nomorRekening">Nomor Rekening/HP</label>
+                            <input type="text" id="nomorRekening" required>
+                        </div>
+                        <button type="submit" class="btn-withdraw">Ajukan Withdraw</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="riwayat-section">
+                <h3>Riwayat Transaksi</h3>
+                <div id="riwayatTransaksi" class="riwayat-list"></div>
+            </div>
+        </div>
+
+        <!-- Notifikasi -->
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script>
+        // Fungsi untuk toggle form
+        function showRegister() {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.add('active');
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+        }
+
+        // Fungsi notifikasi
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = `notification ${type}`;
+            notif.style.display = 'block';
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
+        }
+
+        // Fungsi update saldo di tampilan
+        function updateSaldoDisplay() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                document.getElementById('saldo').textContent = user.saldo.toLocaleString('id-ID');
+            }
+        }
+
+        // Fungsi update VIP display
+        function updateVIPDisplay() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) return;
+
+            const vipBadge = document.getElementById('vipBadge');
+            const vipStatus = document.getElementById('vipStatus');
+            const vipLevel = document.getElementById('currentVipLevel');
+            const vipExpiry = document.getElementById('vipExpiry');
+            const remainingWithdraw = document.getElementById('remainingWithdraw');
+            
+            if (user.vip) {
+                const now = new Date();
+                const expiry = new Date(user.vip.expiry);
+                
+                if (expiry > now) {
+                    // VIP masih aktif
+                    vipBadge.style.display = 'inline';
+                    vipBadge.className = `vip-badge vip${user.vip.level}`;
+                    vipBadge.textContent = `VIP ${user.vip.level}`;
+                    
+                    vipStatus.style.display = 'flex';
+                    vipLevel.textContent = `VIP ${user.vip.level}`;
+                    vipExpiry.textContent = expiry.toLocaleDateString('id-ID');
+                    
+                    // Hitung sisa withdraw
+                    const withdrawLimit = getWithdrawLimit(user.vip.level);
+                    const usedWithdraw = user.vip.usedWithdraw || 0;
+                    const remaining = withdrawLimit - usedWithdraw;
+                    remainingWithdraw.textContent = `Rp ${remaining.toLocaleString('id-ID')}`;
+                    
+                    // Update tombol VIP
+                    document.getElementById('btnVIP1').disabled = true;
+                    document.getElementById('btnVIP2').disabled = true;
+                    document.getElementById('btnVIP3').disabled = true;
+                    
+                    // Update akses game
+                    updateGameAccess(user);
+                    
+                    // Start withdraw timer
+                    startWithdrawTimer(user);
+                } else {
+                    // VIP expired
+                    user.vip = null;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Update di database users
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    const userIndex = users.findIndex(u => u.id === user.id);
+                    if (userIndex !== -1) {
+                        users[userIndex].vip = null;
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+                    
+                    resetVIPDisplay();
+                }
+            } else {
+                resetVIPDisplay();
+            }
+        }
+
+        function resetVIPDisplay() {
+            document.getElementById('vipBadge').style.display = 'none';
+            document.getElementById('vipStatus').style.display = 'none';
+            document.getElementById('btnVIP1').disabled = false;
+            document.getElementById('btnVIP2').disabled = false;
+            document.getElementById('btnVIP3').disabled = false;
+            updateGameAccess({ vip: null });
+        }
+
+        function getWithdrawLimit(level) {
+            switch(level) {
+                case 1: return 20000; // per minggu
+                case 2: return 50000; // per minggu
+                case 3: return 350000; // per 3 hari
+                default: return 0;
+            }
+        }
+
+        function getWithdrawPeriod(level) {
+            switch(level) {
+                case 1: return 7; // 7 hari
+                case 2: return 7; // 7 hari
+                case 3: return 3; // 3 hari
+                default: return 0;
+            }
+        }
+
+        function startWithdrawTimer(user) {
+            if (!user.vip) return;
+            
+            const updateTimer = () => {
+                const now = new Date();
+                const lastWithdraw = user.vip.lastWithdrawReset ? new Date(user.vip.lastWithdrawReset) : new Date();
+                const period = getWithdrawPeriod(user.vip.level) * 24 * 60 * 60 * 1000;
+                const nextReset = new Date(lastWithdraw.getTime() + period);
+                
+                if (nextReset > now) {
+                    const diff = nextReset - now;
+                    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+                    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+                    
+                    document.getElementById('withdrawTimer').textContent = 
+                        `Reset dalam: ${days}h ${hours}j ${minutes}m`;
+                } else {
+                    // Reset withdraw limit
+                    user.vip.usedWithdraw = 0;
+                    user.vip.lastWithdrawReset = new Date().toISOString();
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Update di database
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    const userIndex = users.findIndex(u => u.id === user.id);
+                    if (userIndex !== -1) {
+                        users[userIndex].vip = user.vip;
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+                    
+                    updateVIPDisplay();
+                }
+            };
+            
+            updateTimer();
+            setInterval(updateTimer, 60000); // Update setiap menit
+        }
+
+        function updateGameAccess(user) {
+            const zeusGame = document.getElementById('gameZeus');
+            const duoGame = document.getElementById('gameDuo');
+            
+            if (user.vip && user.vip.level >= 2) {
+                zeusGame.classList.remove('locked');
+               
