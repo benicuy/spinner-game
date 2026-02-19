@@ -327,14 +327,6 @@ body {
     font-size: 18px;
 }
 
-.vip-requirement {
-    font-size: 14px;
-    color: var(--gray);
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .btn-join-vip {
     width: 100%;
     padding: 12px;
@@ -972,11 +964,11 @@ body {
     position: relative;
     border-radius: 50%;
     background: conic-gradient(
-        var(--success) 0deg 72deg,
-        var(--primary) 72deg 144deg,
-        var(--zeus) 144deg 216deg,
-        var(--danger) 216deg 288deg,
-        var(--money) 288deg 360deg
+        #ff6b6b 0deg 72deg,
+        #4ecdc4 72deg 144deg,
+        #ffe66d 144deg 216deg,
+        #ff9ff3 216deg 288deg,
+        #54a0ff 288deg 360deg
     );
     transition: transform 3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
     cursor: pointer;
@@ -1005,24 +997,6 @@ body {
     z-index: 10;
 }
 
-.wheel-labels {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wheel-label {
-    position: absolute;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    text-shadow: 1px 1px 2px black;
-    transform-origin: center;
-}
-
 .prize-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -1039,11 +1013,30 @@ body {
     background: white;
     border-radius: 8px;
     font-weight: 600;
+    position: relative;
+    overflow: hidden;
 }
 
 .prize-item.win-rare {
     background: linear-gradient(135deg, var(--zeus), #fbbf24);
     color: white;
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+.prize-item::after {
+    content: attr(data-probability);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.1);
+    font-size: 10px;
+    padding: 2px;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 5px white; }
+    to { text-shadow: 0 0 15px white; }
 }
 
 /* ========== GAME CONTROLS ========== */
